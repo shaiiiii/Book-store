@@ -1,0 +1,29 @@
+services:
+  backend:
+    build:
+      context: ./Backend/Book-keeper
+      dockerfile: Dockerfile
+    container_name: book-keeper-backend
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./Backend/Book-keeper:/var/www
+    environment:
+      - APP_ENV=production
+      - APP_KEY=your_app_key
+      - APP_DEBUG=false
+      - DB_HOST=your_database_host
+      - DB_PORT=3306
+      - DB_DATABASE=your_database_name
+      - DB_USERNAME=your_database_user
+      - DB_PASSWORD=your_database_password
+
+  frontend:
+    build:
+      context: ./Frontend/project
+      dockerfile: Dockerfile
+    container_name: book-keeper-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./Frontend/project:/usr/src/app
