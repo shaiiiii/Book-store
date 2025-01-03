@@ -1,29 +1,58 @@
+version: '3.8'
+
 services:
   backend:
     build:
       context: ./Backend/Book-keeper
       dockerfile: Dockerfile
-    container_name: book-keeper-backend
-    ports:
-      - "9000:9000"
     volumes:
-      - ./Backend/Book-keeper:/var/www
+      - ./Backend/Book-keeper:/var/www/html
+    ports:
+      - "8000:8000"
     environment:
-      - APP_ENV=production
-      - APP_KEY=your_app_key
-      - APP_DEBUG=false
-      - DB_HOST=your_database_host
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
       - DB_PORT=3306
-      - DB_DATABASE=your_database_name
-      - DB_USERNAME=your_database_user
-      - DB_PASSWORD=your_database_password
+      - DB_DATABASE=bookStore
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+    depends_on:
+      - db
 
   frontend:
     build:
-      context: ./Frontend/project
+      context: ./Frontend
       dockerfile: Dockerfile
-    container_name: book-keeper-frontend
-    ports:
-      - "3000:3000"
     volumes:
-      - ./Frontend/project:/usr/src/app
+      - ./Frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      - BACKEND_URL=http://localhost:8000
+    stdin_open: true
+    tty: true
+
+  db:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: bookStore
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - db_data:/var/lib/mysql
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+volumes:
+  db_data:
