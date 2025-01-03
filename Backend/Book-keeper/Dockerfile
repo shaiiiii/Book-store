@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
     curl \
-    default-mysql-client \ # Replace mysql-client with default-mysql-client
+    default-mysql-client \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev
