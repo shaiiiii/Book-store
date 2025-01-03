@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./Backend/Book-keeper
+      dockerfile: Dockerfile
+    container_name: book-keeper-backend
+    ports:
+      - "8000:8000"  # Updated to match php artisan serve
+    volumes:
+      - ./Backend/Book-keeper:/var/www
+    environment:
+      - APP_NAME=PageKeeper
+      - APP_ENV=local
+      - APP_KEY=base64:KPMalexhvOPqbyvBlB7MjTxXEAd4DErqTYpj9MFWSm8=
+      - APP_DEBUG=true
+      - APP_URL=http://localhost:8000
+      - FRONTEND_URL=http://localhost:5173
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=bookStore
+      - DB_USERNAME=root
+      - DB_PASSWORD=
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./Frontend/project
+      dockerfile: Dockerfile
+    container_name: book-keeper-frontend
+    ports:
+      - "5173:5173"  # Updated to match Vite's port
+    volumes:
+      - ./Frontend/project:/usr/src/app
+    environment:
+      - VITE_APP_NAME=PageKeeper
+      - VITE_PUSHER_APP_KEY=
+      - VITE_PUSHER_HOST=
+      - VITE_PUSHER_PORT=443
+      - VITE_PUSHER_SCHEME=https
+      - VITE_PUSHER_APP_CLUSTER=mt1
+
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ""       # Same as DB_PASSWORD in backend
+      MYSQL_DATABASE: bookStore     # Your Laravel database name
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db                 # Service name for MySQL
+      PMA_USER: root
+      PMA_PASSWORD: ""
+    depends_on:
+      - db
+
+volumes:
+  mysql-data:
