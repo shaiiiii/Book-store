@@ -1,0 +1,483 @@
+openapi: 3.0.3
+info:
+  title: PageKeeper
+  description: ''
+  version: 1.0.0
+servers:
+  -
+    url: 'http://localhost:8000'
+paths:
+  /api/register:
+    post:
+      summary: 'Handle an incoming registration request.'
+      operationId: handleAnIncomingRegistrationRequest
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: h
+                email:
+                  type: string
+                  description: 'Must be a valid email address. Must not be greater than 255 characters.'
+                  example: strosin.jo@example.net
+                password:
+                  type: string
+                  description: ''
+                  example: nihil
+              required:
+                - name
+                - email
+                - password
+      security: []
+  /api/login:
+    post:
+      summary: 'Handle an incoming authentication request.'
+      operationId: handleAnIncomingAuthenticationRequest
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: kmedhurst@example.net
+                password:
+                  type: string
+                  description: ''
+                  example: 'BhI#;!j3$'
+              required:
+                - email
+                - password
+      security: []
+  /api/forgot-password:
+    post:
+      summary: 'Handle an incoming password reset link request.'
+      operationId: handleAnIncomingPasswordResetLinkRequest
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: uschroeder@example.com
+              required:
+                - email
+      security: []
+  /api/reset-password:
+    post:
+      summary: 'Handle an incoming new password request.'
+      operationId: handleAnIncomingNewPasswordRequest
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: ''
+                  example: voluptatem
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: ivah.shanahan@example.org
+                password:
+                  type: string
+                  description: ''
+                  example: ut
+              required:
+                - token
+                - email
+                - password
+      security: []
+  '/api/verify-email/{id}/{hash}':
+    get:
+      summary: "Mark the authenticated user's email address as verified."
+      operationId: markTheAuthenticatedUsersEmailAddressAsVerified
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the verify email.'
+        example: alias
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: hash
+        description: ''
+        example: aut
+        required: true
+        schema:
+          type: string
+  /api/email/verification-notification:
+    post:
+      summary: 'Send a new email verification notification.'
+      operationId: sendANewEmailVerificationNotification
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/logout:
+    post:
+      summary: 'Destroy an authenticated session.'
+      operationId: destroyAnAuthenticatedSession
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/admin/books:
+    get:
+      summary: 'Get all books.'
+      operationId: getAllBooks
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/admin/books/store:
+    post:
+      summary: 'Store a new book.'
+      operationId: storeANewBook
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: ''
+                  example: reprehenderit
+                author:
+                  type: string
+                  description: ''
+                  example: libero
+                price:
+                  type: number
+                  description: 'Must be at least 0.'
+                  example: 73
+                stock:
+                  type: integer
+                  description: 'Must be at least 0.'
+                  example: 76
+                image:
+                  type: string
+                  format: binary
+                  description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+              required:
+                - title
+                - author
+                - price
+                - stock
+      security: []
+  '/api/admin/books/{id}':
+    get:
+      summary: 'Get a single book by ID.'
+      operationId: getASingleBookByID
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    put:
+      summary: 'Update an existing book.'
+      operationId: updateAnExistingBook
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: ''
+                  example: autem
+                author:
+                  type: string
+                  description: ''
+                  example: vero
+                price:
+                  type: number
+                  description: 'Must be at least 0.'
+                  example: 30
+                stock:
+                  type: integer
+                  description: 'Must be at least 0.'
+                  example: 83
+              required:
+                - title
+                - author
+                - price
+                - stock
+      security: []
+    delete:
+      summary: 'Delete a book by ID.'
+      operationId: deleteABookByID
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the book.'
+        example: qui
+        required: true
+        schema:
+          type: string
+  '/api/admin/book-issuances/{userId}':
+    get:
+      summary: ''
+      operationId: getApiAdminBookIssuancesUserId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: userId
+        description: ''
+        example: rerum
+        required: true
+        schema:
+          type: string
+  /api/admin/book-issuances:
+    post:
+      summary: ''
+      operationId: postApiAdminBookIssuances
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                book_id:
+                  type: string
+                  description: ''
+                  example: repudiandae
+                user_id:
+                  type: string
+                  description: ''
+                  example: distinctio
+                issued_date:
+                  type: string
+                  description: 'Must be a valid date.'
+                  example: '2025-01-02T12:13:33'
+              required:
+                - book_id
+                - user_id
+                - issued_date
+      security: []
+  '/api/admin/book-issuances/{issuance}/receive':
+    put:
+      summary: ''
+      operationId: putApiAdminBookIssuancesIssuanceReceive
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: issuance
+        description: ''
+        example: ipsa
+        required: true
+        schema:
+          type: string
+  '/api/admin/book-issuances/user/{userId}':
+    get:
+      summary: ''
+      operationId: getApiAdminBookIssuancesUserUserId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: userId
+        description: ''
+        example: vitae
+        required: true
+        schema:
+          type: string
+  /api/users:
+    get:
+      summary: ''
+      operationId: getApiUsers
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/user:
+    get:
+      summary: ''
+      operationId: getApiUser
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ''
+      tags:
+        - Endpoints
+      security: []
+tags:
+  -
+    name: Endpoints
+    description: ''
